@@ -14,7 +14,8 @@ def api_root():
 def secrets():
 	resp = Response()
 	data = {}
-	if not (request.headers.get('Authorization')):
+	print(request.headers)
+	if not request.headers.get('Authorization') :
 		print('no auth headers')
 		data = { 'message': 'No Authorization Headers were detected'}
 		resp.status_code = 401
@@ -26,12 +27,12 @@ def secrets():
 		
 		if username == 'admin':
 			data = {
-				' message'	: 'The admin user has been authorized',
-				'secret:'	: base64.b64encode(b'secret').decode('ascii')
+				'message'	: f'The user \'{username}\' has been authorized',
+				'secret'	: base64.b64encode(b'secret').decode('ascii')
 			}
 			resp.status_code = 200
 		else:
-			data = { 'message': f'The user {username} is not authorized' }
+			data = { 'message': f'The user \'{username}\' is not authorized' }
 			resp.status_code = 401
 
 	js = json.dumps(data)
