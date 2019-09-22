@@ -55,4 +55,21 @@ Success: The user 'admin' has been authorized
 The secret is c2VjcmV0```
 
 
+### MANUAL TESTS
+
+```
+$: curl http://localhost:5000
+"Welcome to Flask Server"
+
+$: curl http://localhost:5000/secrets
+{"message": "No Authorization Headers were detected"}
+
+$: curl -u "not_admin:secret" http://localhost:5000/secrets
+{"message": "The user 'not_admin' is not authorized"}
+
+$: curl -u "admin:secret" http://localhost:5000/secrets
+{"message": "The user 'admin' has been authorized", "secret": "c2VjcmV0"}
+```
+
+
 
