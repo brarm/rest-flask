@@ -17,6 +17,10 @@ python3 -V
 pip install -U flask requests
 ```
 
+Another option is to use pyenv, which can be installed using `setup.sh`
+This script targets Ubuntu and installs all the dependencies for building python from source
+The setup takes some time, but pyenv is an excellent tool for managing python environments
+
 ### RUN
 
 Create an instance of the REST server with
