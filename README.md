@@ -10,11 +10,13 @@ pip packages
 On Debian systems (Ubuntu, etc):
 ```
 sudo apt-get update
-sudo apt-get install python3
+sudo apt install python3
 
 python3 -V
 
-pip install -U flask requests
+sudo apt install python3-pip
+
+pip3 install -U flask requests
 ```
 
 Another option is to use pyenv, which can be installed using `setup.sh`
