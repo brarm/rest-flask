@@ -31,46 +31,92 @@ Create an instance of the REST server with
 In another terminal, use 
 `python3 rest_parse.py`
 
+### USAGE
+```
+$: python3 rest_parse.py -h
+usage: rest_parse.py [-h] [-u] [-v] VERB url
+
+positional arguments:
+  VERB           {GET|POST|PATCH|PUT|DELETE}
+  url            REST call URL
+
+optional arguments:
+  -h, --help     show this help message and exit
+  -u , --user    user:password for authorization
+  -v, --verbose  Prints header information for req/resp
+```
+
 ### TEST
 
-Input: ```
-python3 rest_parse.py http://localhost:5000/secrets```
+```
+$: python3 rest_parse.py GET http://localhost:5000
 
-Output: ```
-Unauthorized user
-Please check that you provided the right credentials
-The server returned the message: No Authorization Headers were detected```
+Response status     : 200
+Response content    : Welcome to the Flask Server!
 
-Input: ```
-python3 rest_parse.py -u not_admin:secret http://localhost:5000/secrets```
+$: python3 rest_parse.py POST http://localhost:5000/
 
-Output: ```
-Unauthorized user
-Please check that you provided the right credentials
-The server returned the message: The user 'not_admin' is not authorized```
+Response status     : 405
+Response content    : <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>405 Method Not Allowed</title>
+<h1>Method Not Allowed</h1>
+<p>The method is not allowed for the requested URL.</p>
 
-Input: ```
-python3 rest_parse.py -u admin:secret http://localhost:5000/secrets```
+$: python3 rest_parse.py GET http://localhost:5000/echo
 
-Output: ```
-Success: The user 'admin' has been authorized
-The secret is c2VjcmV0```
+Response status 	: 200
+Response content	: ECHO: GET
 
+$: python3 rest_parse.py GET http://localhost:5000/nopage
+
+Response status 	: 404
+Response content	: {'message': 'Not Found: http://localhost:5000/nopage', 'status': 404}
+
+$: python3 rest_parse.py GET http://localhost:5000/secrets
+
+Response status 	: 401
+Response content	: {'message': 'Authentication failed', 'user': None}
+
+$: python3 rest_parse.py GET http://localhost:5000/secrets -u admin:secret
+
+Response status 	: 200
+Response content	: {'message': 'Authentication presented succesfully'}
+
+$: python3 rest_parse.py GET http://localhost:5000/secrets -u admin:secret -i
+
+>Request headers    : {'User-Agent': 'python-requests/2.18.4', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Basic YWRtaW46c2VjcmV0'}
+>Request URL        : http://localhost:5000/secrets
+>Request body       : None
+
+Response status     : 200
+Response content    : {'message': 'Authentication presented succesfully'}
+
+<Response headers   : {'Content-Type': 'application/json', 'Content-Length': '51', 'Server': 'Werkzeug/0.16.0 Python/3.7.3', 'Date': 'Mon, 23 Sep 2019 07:30:41 GMT'}
+```
 
 ### MANUAL TESTS
 
 ```
 $: curl http://localhost:5000
-"Welcome to Flask Server"
+"Welcome to the Flask Server!"
+
+$: curl -X POST http://localhost:5000/secrets
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>405 Method Not Allowed</title>
+<h1>Method Not Allowed</h1>
+<p>The method is not allowed for the requested URL.</p>
+
+$: curl http://localhost:5000/echo
+ECHO: GET
+
+$: curl http://localhost:5000/nopage
+{"message":"Not Found: http://localhost:5000/nopage","status":404}
 
 $: curl http://localhost:5000/secrets
-{"message": "No Authorization Headers were detected"}
+{"message":"Authentication failed","user":null}
 
-$: curl -u "not_admin:secret" http://localhost:5000/secrets
-{"message": "The user 'not_admin' is not authorized"}
-
-$: curl -u "admin:secret" http://localhost:5000/secrets
-{"message": "The user 'admin' has been authorized", "secret": "c2VjcmV0"}
+$: curl http://localhost:5000/secrets -u admin:secret
+{"message":"Authentication presented succesfully"}
 ```
 
 

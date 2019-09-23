@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def api_root():
-    return json.dumps('Welcome to Flask Server')
+    return jsonify('Welcome to the Flask Server!')
 
 @app.route('/hello', methods = ['GET'])
 def api_hello():
@@ -77,8 +77,12 @@ def api_message():
 def check_auth(username, password):
     return username =='admin' and password == 'secret'
 
-def authenticate():
-    message = {'message': 'Authenticate.'}
+def authenticate(user=None):
+    
+    message = {
+        'message'   : 'Authentication failed',
+        'user'      :  user
+        }
     resp = jsonify(message)
 
     resp.status_code = 401
@@ -93,7 +97,7 @@ def requires_auth(f):
         if not auth:
             return authenticate()
         elif not check_auth(auth.username, auth.password):
-            return authenticate()
+            return authenticate(auth.username)
         print(*args)
         print(**kwargs)
         return f(*args, **kwargs)
@@ -105,6 +109,7 @@ def requires_auth(f):
 @app.route('/secrets', methods=['GET'])
 @requires_auth
 def secrets():
+    print(request.headers)
     message = {'message' : 'Authentication presented succesfully'}
     return jsonify(message)
 
