@@ -34,7 +34,7 @@ In another terminal, use
 ### USAGE
 ```
 $: python3 rest_parse.py -h
-usage: rest_parse.py [-h] [-u] [-v] VERB url
+usage: rest_parse.py [-h] [-u] [-i] VERB url
 
 positional arguments:
   VERB           {GET|POST|PATCH|PUT|DELETE}
@@ -43,7 +43,7 @@ positional arguments:
 optional arguments:
   -h, --help     show this help message and exit
   -u , --user    user:password for authorization
-  -v, --verbose  Prints header information for req/resp
+  -i, --include  Prints header information for req/resp
 ```
 
 ### TEST
